@@ -1,29 +1,49 @@
-const justePrix = Math.round(Math.random() * 500);
+function randomNumber(min, max) {
+  return Math.round(Math.random() * (max - min) + min);
+}
 
-console.log(justePrix);
+const score = [];
+let affichage = score.join("");
 
-let tentatives = 0;
-let continuerJeu = true;
+function play() {
+  const game = {
+    searchedNumber: randomNumber(10, 20),
+    attempts: 1,
+  };
 
-while (continuerJeu) {
-  const reponse = parseInt(prompt("Donnes-moi un nombre entre 0 et 500"));
+  let enteredNumber = parseInt(prompt("Donnes-moi un nombre entre 10 et 20 !"));
 
-  if (reponse === justePrix) {
-    alert(`Bravo tu as gagné ! Tu as réussi en ${tentatives} tentatives ! 🎉`);
-    break;
-  } else if (reponse > justePrix) {
-    const reponseConfirmee = confirm("C'est moins !");
-    if (!reponseConfirmee) {
-      alert("Vous avez quitté le jeu.");
-      continuerJeu = false;
+  while (enteredNumber !== game.searchedNumber) {
+    game.attempts++;
+
+    if (!enteredNumber) {
+      break;
     }
-    tentatives++;
+    if (enteredNumber < game.searchedNumber) {
+      enteredNumber = parseInt(prompt("C'est plus"));
+    } else {
+      enteredNumber = parseInt(prompt("C'est moins"));
+    }
+  }
+
+  if (enteredNumber) {
+    score.push(game.attempts);
+    alert(
+      `Bravo ! C'était bien ${enteredNumber} ! - Nombre d'essais : ${game.attempts}`
+    );
   } else {
-    const reponseConfirmee = confirm("C'est plus !");
-    if (!reponseConfirmee) {
-      alert("Vous avez quitté le jeu.");
-      continuerJeu = false;
+    alert("Vous abandonnez ? Dommage...");
+  }
+
+  const restart = confirm("Veux-tu rejouer ?");
+  if (restart) {
+    play();
+  } else {
+    for (let i = 0; i < score.length; i++) {
+      affichage = `Partie ${i + 1} : ${score[i]} essai(s)`;
     }
-    tentatives++;
+    alert(`Fin du jeu. Tableau des scrores : ${affichage}`);
   }
 }
+
+play();
